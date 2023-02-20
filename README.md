@@ -1,3 +1,5 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/59f9c53d-e5af-4946-805b-0d59ddcb2fc8/deploy-status)](https://app.netlify.com/sites/incandescent-otter/deploys)
+
 # Astro Starter Kit: Minimal
 
 ```
