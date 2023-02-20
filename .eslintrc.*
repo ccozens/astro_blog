@@ -1,0 +1,9 @@
+{
+    "extends": "eslint:recommended",
+    "overrides": [
+        {
+            "files": ["*.astro"],
+            "parser": "astro-eslint-parser"
+        }
+    ]
+}
