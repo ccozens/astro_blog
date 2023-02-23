@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Cool sites'
 pubDate: 2023-02-20
 author: 'Chris'

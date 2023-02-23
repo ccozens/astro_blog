@@ -15,10 +15,15 @@
   // 	],
   // 	"description": "Log output to console"
   // },
+  "astro": {
+    "prefix": "",
+    "body": ["---", "layout: $1", "---", "", "$2"]
+  },
   "post": {
     "prefix": "",
     "body": [
       "---",
+      "layout: ../../layouts/MarkdownPostLayout.astro",
       "title: '$1'",
       "pubDate: $2",
       "author: '$3'",

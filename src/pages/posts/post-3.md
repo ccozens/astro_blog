@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Conditional rendering'
 pubDate: 2023-02-20
 author: 'Chris'
@@ -8,7 +9,7 @@ image:
 tags: ["astro", "blogging", "learning in public", ]
 
 ---
-#Conditionally render elements
+# Conditionally render elements
 
 I thought (this)[https://docs.astro.build/en/tutorial/2-pages/3/#conditionally-render-elements] was so neat I've kept a note.
 

@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Second post: snippets'
 pubDate: 2023-02-20
 author: 'Chris'
@@ -8,7 +9,7 @@ image:
 tags: ["astro", "blogging", "learning in public", "snippets"]
 
 ---
-#This is generated from a snippet!
+# This is generated from a snippet!
 
 Thanks to [ceciliacreates](https://dev.to/ceceliacreates/use-vs-code-snippets-to-generate-markdown-front-matter-fpc#:~:text=To%20open%20the%20snippets%20menu,the%20values%20for%20your%20file) and for recommending the excellent [snippet generator](https://snippet-generator.app/).
 

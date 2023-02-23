@@ -1,5 +1,6 @@
 ---
-title: 'First Post'
+layout: ../../layouts/MarkdownPostLayout.astro
+title: 'First blog, first post!'
 pubDate: 2023-02-20
 author: 'Chris'
 image:
@@ -8,7 +9,6 @@ image:
 tags: ["astro", "blogging", "learning in public", "plans"]
 
 ---
-# First blog, first post!
 
 ## Where I'm at
 Hi,
