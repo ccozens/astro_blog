@@ -4,6 +4,8 @@
   /* --headerFooterColor: ; */
   --yellowForText: hsla(40, 94%, 68%, 1);
   --yellowForLinks: hsla(39, 94%, 46%, 1);
+  --purpleForTags: hsla(291, 97%, 20%, 1);
+  --borderGray: hsla(0, 0%, 63%, 1);
 }
 
 html {
@@ -55,12 +57,7 @@ h1 {
   font-size: 2.5rem;
 }
 
-/* tag styles */
-.tag {
-  margin: 0rem 0.3rem;
-  font-style: normal;
-}
-
+/* .blogPostList styles */
 .blogPostList {
   list-style-type: none;
 }

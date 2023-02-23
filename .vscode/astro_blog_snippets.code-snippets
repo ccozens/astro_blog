@@ -17,7 +17,18 @@
   // },
   "astro": {
     "prefix": "",
-    "body": ["---", "layout: $1", "---", "", "$2"]
+    "body": [
+      "---",
+      "import BaseLayout from \"../../layouts/BaseLayout.astro\";",
+      "const pageTitle=\"$1\"",
+      "---",
+      "",
+      "<BaseLayout pageTitle={pageTitle}>",
+      "",
+      "\t$2",
+      "",
+      "</BaseLayout>"
+    ]
   },
   "post": {
     "prefix": "",
