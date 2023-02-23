@@ -1,0 +1,6 @@
+---
+// allow component to receive url and title as Astro.props
+const { url, title } = Astro.props;
+---
+
+<li><a class="blogPostLink" {url}>{title}</a></li>

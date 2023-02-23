@@ -55,9 +55,14 @@ h1 {
   font-size: 2.5rem;
 }
 
+/* tag styles */
 .tag {
   margin: 0rem 0.3rem;
   font-style: normal;
+}
+
+.blogPostList {
+  list-style-type: none;
 }
 
 /* nav styles */

@@ -10,8 +10,6 @@ tags: ["astro", "blogging", "learning in public", "basics"]
 ---
 
 
-# Astro basics
-
 ## JavaScript
 
 ### JS between in [frontmatter](https://docs.astro.build/en/core-concepts/astro-components/#the-component-script) vs [client-side](https://docs.astro.build/en/core-concepts/astro-components/#client-side-scripts)
@@ -372,11 +370,136 @@ const { frontmatter } = Astro.props;
 
 
 # Astro API
-## Index page
+
+## KTA
+If you need information to construct the page routes, write it inside getStaticPaths().
+
+To receive information in the HTML template of a page route, write it outside getStaticPaths().
+
+## Index page using [Astro.glob()](https://docs.astro.build/en/reference/api-reference/#astroglob)
 Astro.glob() to access data from files in your project
 
-## tab pages
+1. Add `const allPosts = await Astro.glob('../pages/posts/*.md');` to blog.astro frontmatter to return information about all Mardown files
+2. Dynamically render list of markdown files by calling .map() between \<ul> tags: 
+
+```jsx
+<ul>
+	{allPosts.map((post) => <li><a href={post.url}>{post.frontmatter.title}</a></li>)}`
+</ul>
+```
+
+3. Ditch that and do it with a BlogPost component!
+	1. create src/components/BlogPost.astro
+	2. allow component to receive url and title as Astro.props:
+`const { url, title } = Astro.props;` (in frontmatter)
+	3. define element to return in main body `<li><a class="blogpost" {url}>{title}</a></li>`
+	4. import into blog.astro `import BlogPost from "../components/BlogPost.astro";`
+	5. Instantiate in main blog.astro component and pass in url and title: `{allPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title} />)}`
+
+
+## create pages dynamically using [getStaticPaths()](https://docs.astro.build/en/reference/api-reference/#getstaticpaths)
 getStaticPaths() to create multiple pages (routes) at once
+- Create a page to generate multiple pages
+- Specify which page routes to build, and pass each page its own props
+
+1. Create a new file at src/pages/tags/[tag].astro
+2. The getStaticPaths function returns an array of page routes, and all of the pages at those routes will use the same template defined in the file. So, paste:
+	
+	```jsx
+	---
+	import BaseLayout from '../../layouts/BaseLayout.astro';
+	
+	export async function getStaticPaths() {
+	  return [
+	    { params: { tag: "astro" } },
+	    { params: { tag: "successes" } },
+	    { params: { tag: "community" } },
+	    { params: { tag: "blogging" } },
+	    { params: { tag: "setbacks" } },
+	    { params: { tag: "learning in public" } },
+	  ];
+	}
+	
+	const { tag } = Astro.params;
+	---
+	<BaseLayout pageTitle={tag}>
+	  <p>Posts tagged with {tag}</p>
+	</BaseLayout>
+	```
+This creates the empty pages for tags
+3. add props to the dynamic routes to make data from all blog posts available to ech route, and then make those props available to component template outsude the function.
+	
+	```jsx
+	export async function getStaticPaths() {
+	  const allPosts = await Astro.glob('../posts/*.md');
+	
+	  return [
+	    {params: {tag: "astro"}, props: {posts: allPosts}},
+	    {params: {tag: "successes"}, props: {posts: allPosts}},
+	    {params: {tag: "community"}, props: {posts: allPosts}},
+	    {params: {tag: "blogging"}, props: {posts: allPosts}},
+	    {params: {tag: "setbacks"}, props: {posts: allPosts}},
+	    {params: {tag: "learning in public"}, props: {posts: allPosts}}
+	  ]
+	}
+	
+	const { tag } = Astro.params;
+	const { posts } = Astro.props;
+	```
+
+4. Filter your list of posts to only include posts that contain the page’s own tag: `const filteredPosts = posts.filter((post) => post.frontmatter.tags.includes(tag));`
+5. Update HTML template in `[tag].astro` to render filtered posts only:
+	
+	```jsx
+	<BaseLayout pageTitle={tag}>   
+	  <p>Posts tagged with {tag}</p>
+	  <ul>
+	    {filteredPosts.map((post) => <li><a href={post.url}>{post.frontmatter.title}</a></li>)}
+	  </ul>
+	</BaseLayout>
+	```
+	Or refactor to use BlogPost component:
+
+	```jsx
+		<BaseLayout pageTitle={tag}>
+	  <p>Posts tagged with {tag}</p>
+	  <ul>
+	    {filteredPosts.map(post => <BlogPost url={post.url} title={post.frontmatter.title}/>)}
+	  </ul>
+	</BaseLayout>
+	```
+
+### Auto-generating tag list via [dynamic routing](https://docs.astro.build/en/core-concepts/routing/#dynamic-routes)
+This is great, but means updating the above list of tags manually. To auto-generate:
+
+1. Check all blog posts contain tags!
+2. create an array of tags using [Set()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set), which stores unique values of any type, and [flat()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat) to flatten the array: `const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];`
+3. Replace the return value of the getStaticPaths function with: 
+
+	```jsx
+	return uniqueTags.map((tag) => {
+	    const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+	    return {
+	      params: { tag },
+	      props: { posts: filteredPosts },
+	    };
+	  });
+	```
+
+4. A getStaticPaths function should always return a list of objects containing params (what to call each page route) and optionally any props (data that you want to pass to those pages). Earlier, you defined each tag name that you knew was used in your blog and passed the entire list of posts as props to each page.
+
+Now, you generate this list of objects automatically using your uniqueTags array to define each parameter.
+
+And, now the list of all blog posts is filtered before it is sent to each page as props. Be sure to remove the previous line of code filtering the posts, and update your HTML template to use posts instead of filteredPosts:  
+- replace `{filteredPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title}/>)}`
+- with `{posts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title}/>)}`
+
+## Build a tag index page
+- Add a new page using the /my-folder/index.astro routing pattern
+- Display a list of all your unique tags, linking to each tag page
+- Update your site with navigation links to this new Tags page
+
+
 
 ## RSS feed
 Astro RSS package
