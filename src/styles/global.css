@@ -1,6 +1,41 @@
+:root {
+  --backgroundColorMain: hsla(240, 69%, 19%, 1);
+  --backgroundColorHeaderFooter: hsla(240, 79%, 10%, 1);
+  /* --headerFooterColor: ; */
+  --yellowForText: hsla(40, 94%, 68%, 1);
+  --yellowForLinks: hsla(39, 94%, 46%, 1);
+}
+
 html {
-  background-color: #f1f5f9;
+  background-color: var(--backgroundColorMain);
+  color: var(--yellowForText);
   font-family: sans-serif;
+}
+
+html a {
+  text-decoration: none;
+  display: inline-block;
+  position: relative;
+  color: var(--yellowForLinks);
+}
+
+/* animation from https://www.30secondsofcode.org/css/s/hover-underline-animation */
+html a::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--yellowForLinks);
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+html a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
 }
 
 body {
@@ -20,6 +55,11 @@ h1 {
   font-size: 2.5rem;
 }
 
+.tag {
+  margin: 0rem 0.3rem;
+  font-style: normal;
+}
+
 /* nav styles */
 /* hamburger styles */
 .hamburger {
@@ -32,14 +72,14 @@ h1 {
   width: 40px;
   height: 5px;
   margin-bottom: 10px;
-  background-color: #ff9776;
+  background-color: var(--yellowForLinks);
 }
 
 .nav-links {
   width: 100%;
   top: 5rem;
   left: 48px;
-  background-color: #ff9776;
+  background-color: var(--yellowForLinks);
   display: none;
   margin: 0;
 }
@@ -52,10 +92,12 @@ h1 {
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
+  border-radius: 0.1em;
 }
 
 .nav-links a:hover, a:focus {
-  background-color: #ff9776;
+  background-color: var(--yellowForLinks);
+  color: var(--backgroundColorHeaderFooter);
 }
 
 .expanded {

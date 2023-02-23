@@ -369,3 +369,14 @@ const { frontmatter } = Astro.props;
   <slot />
 </BaseLayout>
 ```
+
+
+# Astro API
+## Index page
+Astro.glob() to access data from files in your project
+
+## tab pages
+getStaticPaths() to create multiple pages (routes) at once
+
+## RSS feed
+Astro RSS package
