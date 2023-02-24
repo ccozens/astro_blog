@@ -10,7 +10,10 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"astro": "^2.0.14"
+		"@astrojs/preact": "^2.0.3",
+		"@astrojs/rss": "^2.1.1",
+		"astro": "^2.0.14",
+		"preact": "^10.13.0"
 	},
 	"devDependencies": {
 		"@typescript-eslint/parser": "^5.52.0",

@@ -19,10 +19,19 @@ export async function getStaticPaths() {
 const { tag } = Astro.params;
 const { posts } = Astro.props;
 
+// need to revisit these
+type postType = {
+  url: string;
+  frontmatter: any;
+};
+interface Frontmatter extends postType {
+  title: string;
+}
+
 ---
 <BaseLayout pageTitle={tag}>
   <p>Posts tagged with {tag}</p>
   <ul class="blogPostList">
-    {posts.map(post => <BlogPost url={post.url} title={post.frontmatter.title}/>)}
+    {posts.map((post: postType) => <BlogPost url={post.url} title={post.frontmatter.title}/>)}
   </ul>
 </BaseLayout>

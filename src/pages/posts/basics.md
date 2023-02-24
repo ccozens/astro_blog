@@ -1,4 +1,5 @@
 ---
+layout: ../../layouts/MarkdownPostLayout.astro
 title: 'astro basics'
 pubDate: 2022-02-23
 author: 'Chris'
@@ -494,12 +495,52 @@ And, now the list of all blog posts is filtered before it is sent to each page a
 - replace `{filteredPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title}/>)}`
 - with `{posts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title}/>)}`
 
-## Build a tag index page
+## Build a tag index page: [static routing](https://docs.astro.build/en/core-concepts/routing/#static-routes)
 - Add a new page using the /my-folder/index.astro routing pattern
 - Display a list of all your unique tags, linking to each tag page
 - Update your site with navigation links to this new Tags page
 
 
 
-## RSS feed
-Astro RSS package
+## [RSS feed](https://docs.astro.build/en/guides/rss/)
+Docs on [pagesGlobToRssItems()](https://docs.astro.build/en/guides/rss/#using-glob-imports)
+1. quit dev server and install astro RSS package: `npm install @astrojs/rss`;
+2. Create an .xml feed document: `src/pages/rss.xml.js`
+3. In that doc, adapt this boilerplate as necessary:
+	
+	```javascript
+	import rss, { pagesGlobToRssItems } from '@astrojs/rss';
+	
+	export async function get() {
+	  return rss({
+	    title: 'Astro Learner | Blog',
+	    description: 'My journey learning Astro',
+	    site: 'https://my-blog-site.netlify.app',
+	    items: await pagesGlobToRssItems(import.meta.glob('./**/*.md')),
+	    customData: `<language>en-us</language>`,
+	  });
+	}
+	```
+
+4. This rss.xml document is only created when your site is built, so you won’t be able to see this page in your browser during development. Quit the dev server and run the following commands to first, build your site locally and then, view a preview of your build:  
+`npm run build`  
+`npm run preview`  
+5. Visit localhost:3000/rss.xml and verify that you can see (unformatted) text on the page with an item for each of your .md files. Each item should contain blog post information such as title, url, and description.
+
+6. Be sure to quit the preview and restart the dev server when you want to view your site in development mode again.
+
+-->  Can now VIEW YOUR RSS FEED IN A READER
+
+Download a feed reader, or sign up for an online feed reader service and subscribe to your site by adding your own Netlify URL. You can also share this link with others so they can subscribe to your posts, and be notified when a new one is published.
+
+## [Astro islands](https://docs.astro.build/en/concepts/islands/)
+
+### Add a UI framework, Preact, to your Astro project
+
+1. quit dev server and add preact: `npx astro add preact`
+2. 
+
+### Use Preact to create an interactive greeting component
+
+### Learn when you might not choose islands for interactivity
+
