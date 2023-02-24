@@ -535,12 +535,117 @@ Download a feed reader, or sign up for an online feed reader service and subscri
 
 ## [Astro islands](https://docs.astro.build/en/concepts/islands/)
 
-### Add a UI framework, Preact, to your Astro project
+### Add a UI framework to your Astro project
+#### [Astro framework reference](https://docs.astro.build/en/core-concepts/framework-components/#using-framework-components)
+#### [Astro integration guide](https://docs.astro.build/en/guides/integrations-guide/)
 
 1. quit dev server and add preact: `npx astro add preact`
-2. 
+2. create `src/components/Greeting.jsx`
+3. populate:
+	
+	```jsx
+	import { h } from 'preact';
+	import { useState } from 'preact/hooks';
+	
+	export default function Greeting({messages}) {
+	
+	  const randomMessage = () => messages[(Math.floor(Math.random() * messages.length))];
+	  
+	  const [greeting, setGreeting] = useState(randomMessage());
+	
+	  return (
+	    <div> 
+	      <h3>{greeting}! Thank you for visiting!</h3>
+	      <button onClick={() => setGreeting(randomMessage())}>
+	        New Greeting
+	      </button>
+	    </div>
+	  );
+	}
+	```
 
-### Use Preact to create an interactive greeting component
+4. import into Homepage (`src/pages/index.astro`)
 
-### Learn when you might not choose islands for interactivity
+```jsx
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Greeting from '../components/Greeting';
+const pageTitle = 'Winning Page';
+---
 
+<BaseLayout pageTitle={pageTitle}>
+  <h2>My awesome blog subtitle</h2>
+  <Greeting messages={["Hi", "Hello", "Howdy", "Hey there"]} />
+</BaseLayout>
+```
+Now the site loads and shows the greeting and button, but the `New Greeting` button does not work. So:  
+5. Add a second <Greeting /> component with the client:load directive.  
+	`<Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />`
+This button works because `client:load` tells Astro to send and rerun its JavaScript to the client when the page loads, making the component interactive (ie - hydrating the component).  
+6. 
+
+
+### [Client Directives](https://docs.astro.build/en/reference/directives-reference/#client-directives)
+
+- client: load
+	- load and hydrate the component JavaScript immediately on page load. 
+	- for immediately-visible UI elements that need to be interactive as soon as possible.
+- client:idle
+	- Load and hydrate the component JavaScript once the page is done with its initial load and the requestIdleCallback event has fired. If you are in a browser that doesn’t support requestIdleCallback, then the document load event is used.
+	- Useful for: Lower-priority UI elements that don’t need to be immediately interactive.
+- client:visible
+	- Load and hydrate the component JavaScript once the component has entered the user’s viewport. This uses an IntersectionObserver internally to keep track of visibility.
+	- Useful for: Low-priority UI elements that are either far down the page (“below the fold”) or so resource-intensive to load that you would prefer not to load them at all if the user never saw the element.
+- client: media
+	- client:media={string} loads and hydrates the component JavaScript once a certain CSS media query is met.
+	- Useful for: Sidebar toggles, or other elements that might only be visible on certain screen sizes.
+- client: only
+	- client:only={string} skips HTML server-rendering, and renders only on the client. It acts similar to client:load in that it loads, renders and hydrates the component immediately on page load.
+
+
+## JS theme toggle
+1. Create a new file at src/components/ThemeIcon.astro and paste the following code into it:
+	
+	```jsx
+	src/components/ThemeIcon.astro
+	---
+	---
+	<button id="themeToggle">
+	  <svg width="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+	    <path class="sun" fill-rule="evenodd" d="M12 17.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 1.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm12-7a.8.8 0 0 1-.8.8h-2.4a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8zM4 12a.8.8 0 0 1-.8.8H.8a.8.8 0 0 1 0-1.6h2.5a.8.8 0 0 1 .8.8zm16.5-8.5a.8.8 0 0 1 0 1l-1.8 1.8a.8.8 0 0 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM6.3 17.7a.8.8 0 0 1 0 1l-1.7 1.8a.8.8 0 1 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM12 0a.8.8 0 0 1 .8.8v2.5a.8.8 0 0 1-1.6 0V.8A.8.8 0 0 1 12 0zm0 20a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-1.6 0v-2.4a.8.8 0 0 1 .8-.8zM3.5 3.5a.8.8 0 0 1 1 0l1.8 1.8a.8.8 0 1 1-1 1L3.5 4.6a.8.8 0 0 1 0-1zm14.2 14.2a.8.8 0 0 1 1 0l1.8 1.7a.8.8 0 0 1-1 1l-1.8-1.7a.8.8 0 0 1 0-1z"/>
+	    <path class="moon" fill-rule="evenodd" d="M16.5 6A10.5 10.5 0 0 1 4.7 16.4 8.5 8.5 0 1 0 16.4 4.7l.1 1.3zm-1.7-2a9 9 0 0 1 .2 2 9 9 0 0 1-11 8.8 9.4 9.4 0 0 1-.8-.3c-.4 0-.8.3-.7.7a10 10 0 0 0 .3.8 10 10 0 0 0 9.2 6 10 10 0 0 0 4-19.2 9.7 9.7 0 0 0-.9-.3c-.3-.1-.7.3-.6.7a9 9 0 0 1 .3.8z"/>
+	  </svg>
+	</button>
+	
+	<style>
+	  #themeToggle {
+	    border: 0;
+	    background: none;
+	  }
+	  .sun { fill: black; }
+	  .moon { fill: transparent; }
+	  
+	
+	  :global(.dark) .sun { fill: transparent; }
+	  :global(.dark) .moon { fill: white; }
+	</style>
+	```
+
+2. Add to Header/astro: `import ThemeIcon from './ThemeIcon.astro';` and instantiate `<ThemeIcon />`
+3. Add dark theme CSS to `global.css`
+	
+	```css
+	dark body {
+	  background-color: #0d0950;
+	  color: #fff;
+	}
+	
+	.dark .nav-links a {
+	  color: #fff;
+	}
+	```
+4. Add client site interactivity with \<script> tag in ThemeIcon.astro
+
+```jsx
+
+```

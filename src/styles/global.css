@@ -1,145 +1,92 @@
-:root {
-  --backgroundColorMain: hsla(240, 69%, 19%, 1);
-  --backgroundColorHeaderFooter: hsla(240, 79%, 10%, 1);
-  /* --headerFooterColor: ; */
-  --yellowForText: hsla(40, 94%, 68%, 1);
-  --yellowForLinks: hsla(39, 94%, 46%, 1);
-  --purpleForTags: hsla(291, 97%, 20%, 1);
-  --borderGray: hsla(0, 0%, 63%, 1);
-}
-
 html {
-  background-color: var(--backgroundColorMain);
-  color: var(--yellowForText);
-  font-family: sans-serif;
-}
-
-html a {
-  text-decoration: none;
-  display: inline-block;
-  position: relative;
-  color: var(--yellowForLinks);
-}
-
-/* animation from https://www.30secondsofcode.org/css/s/hover-underline-animation */
-html a::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  transform: scaleX(0);
-  height: 2px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--yellowForLinks);
-  transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
-}
-
-html a:hover::after {
-  transform: scaleX(1);
-  transform-origin: bottom left;
-}
-
-body {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 80ch;
-  padding: 1rem;
-  line-height: 1.5;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-h1 {
-  margin: 1rem 0;
-  font-size: 2.5rem;
-}
-
-/* .blogPostList styles */
-.blogPostList {
-  list-style-type: none;
-}
-
-/* tag styling */
-.tags {
-  display: flex; 
-  flex-wrap: wrap; 
-  margin: 0 auto;  
-}
-
-.tag {
-  margin: 0.25em;
-  border: dotted 1px #a1a1a1;
-  border-radius: .5em;
-  padding: .5em 1em;
-  font-size: 1.15em;
-  background-color: var(--purpleForTags);
-}
-/* capitalise first letter only */
-.tag::first-letter {
-    text-transform: capitalize;
-}
-
-/* nav styles */
-/* hamburger styles */
-.hamburger {
-  padding-right: 20px;
-  cursor: pointer;
-}
-
-.hamburger .line {
-  display: block;
-  width: 40px;
-  height: 5px;
-  margin-bottom: 10px;
-  background-color: var(--yellowForLinks);
-}
-
-.nav-links {
-  width: 100%;
-  top: 5rem;
-  left: 48px;
-  background-color: var(--yellowForLinks);
-  display: none;
-  margin: 0;
-}
-
-.nav-links a {
-  display: block;
-  text-align: center;
-  padding: 10px 0;
-  text-decoration: none;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  border-radius: 0.1em;
-}
-
-.nav-links a:hover, a:focus {
-  background-color: var(--yellowForLinks);
-  color: var(--backgroundColorHeaderFooter);
-}
-
-.expanded {
-  display: unset;
-}
-
-@media screen and (min-width: 636px) {
-  .nav-links {
-    margin-left: 5em;
-    display: block;
-    position: static;
-    width: auto;
-    background: none;
+    background-color: #f1f5f9;
+    font-family: sans-serif;
   }
-
-  .nav-links a {
-    display: inline-block;
-    padding: 15px 20px;
+  
+  body {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 80ch;
+    padding: 1rem;
+    line-height: 1.5;
   }
-
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  h1 {
+    margin: 1rem 0;
+    font-size: 2.5rem;
+  }
+  
+  /* nav styles */
+  
   .hamburger {
+    padding-right: 20px;
+    cursor: pointer;
+  }
+  
+  .hamburger .line {
+    display: block;
+    width: 40px;
+    height: 5px;
+    margin-bottom: 10px;
+    background-color: #ff9776;
+  }
+  
+  .nav-links {
+    width: 100%;
+    top: 5rem;
+    left: 48px;
+    background-color: #ff9776;
     display: none;
+    margin: 0;
+  }
+  
+  .nav-links a {
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .nav-links a:hover,
+  a:focus {
+    background-color: #ff9776;
+  }
+  
+  .expanded {
+    display: unset;
+  }
+  
+  @media screen and (min-width: 636px) {
+    .nav-links {
+      margin-left: 5em;
+      display: block;
+      position: static;
+      width: auto;
+      background: none;
+    }
+  
+    .nav-links a {
+      display: inline-block;
+      padding: 15px 20px;
+    }
+  
+    .hamburger {
+      display: none;
+    }
+  }
+  
+  .dark body {
+    background-color: #0d0950;
+    color: #fff;
+  }
+  
+  .dark .nav-links a {
+    color: #fff;
   }
