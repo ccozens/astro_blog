@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'Second post: snippets'
 pubDate: 2023-02-20
 author: 'Chris'

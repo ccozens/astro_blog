@@ -647,5 +647,146 @@ This button works because `client:load` tells Astro to send and rerun its JavaSc
 4. Add client site interactivity with \<script> tag in ThemeIcon.astro
 
 ```jsx
+    const theme: any = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('prefers-color-scheme: dark').matches) {
+            return 'dark'
+        }
+        else {
+            return 'light'
+        }
+    })();
 
+    if (theme ==='light') {
+        document.documentElement.classList.remove('dark');
+    }
+    else {
+        document.documentElement.classList.add('dark');
+    };
+
+    window.localStorage.setItem('theme', theme);
+
+    const handleToggleClick = () => {
+        const element = document.documentElement;
+        element.classList.toggle('dark');
+
+        const isDark = element.classList.contains("dark");
+        localStorage.setItem("theme", isDark ? "dark" : "light");
+    };
+
+    document.getElementById("themeToggle")!.addEventListener("click", handleToggleClick); //! is the non-null assertion operator
 ```
+
+
+# Migrating from file-based routing to document collection
+
+1. Update `tsconfig.json`
+	
+	```json
+	{
+	  "extends": "astro/tsconfigs/strict",
+	  "compilerOptions": {
+	    "jsx": "react-jsx",
+	    "jsxImportSource": "preact",
+	    "strictNullChecks": true,
+	    "allowJs": true
+	  }
+	}
+	```
+
+2. Move markdown files from `stc/pages/posts` -> `src/content/posts`
+3. Create a src/content/config.ts file and [define a schema](https://docs.astro.build/en/guides/content-collections/#defining-a-collection-schema) for each content type. For the blog, we only have one content type, posts:
+	
+	```typescript
+	// Import utilities from `astro:content`
+	import { z, defineCollection } from "astro:content";
+	// Define a schema for each collection you'd like to validate.
+	const postsCollection = defineCollection({
+	    schema: z.object({
+	      title: z.string(),
+	      pubDate: z.date(),
+	      description: z.string(),
+	      author: z.string(),
+	      image: z.object({
+	        url: z.string(),
+	        alt: z.string()
+	      }).optional(),
+	      tags: z.array(z.string())
+	    })
+	});
+	// Export a single `collections` object to register your collection(s)
+	export const collections = {
+	  posts: postsCollection,
+	};
+	```
+	--> ran `npx astro sync` to generate types and get rod of `cannot find module: astro:content` error
+
+4. Generate routes from your collections. Inside a collection, Markdown and MDX files no longer automatically become pages using Astro’s file-based routing, so you must generate the pages yourself.
+	
+	For the tutorial, create a `src/pages/posts/[...slug].astro`. This page will use dynamic routing and to generate a page for each collection entry.
+	
+	This page will also need to query your collection to fetch page slugs and make the page content available to each route.
+	
+	Render your post <Content /> within the layout for your Markdown or MDX pages. This allows you to specify a common layout for all of your posts.
+		
+	```jsx
+	---
+	import { getCollection } from "astro:content";
+	import MarkdownPostLayout from '../../layouts/MarkdownPostLayout.astro';
+	
+	// query collection for posts
+	
+	export async function getStaticPaths() {
+	    const blogEntries = await getCollection('posts');
+	    return blogEntries.map(entry => ({
+	        params: {slug: entry.slug}, props: {entry}
+	    }));
+	}
+	
+	const { entry } = Astro.props;
+	const { Content } = await entry.render();
+	---
+	<!-- render -->
+	
+	<MarkdownPostLayout frontmatter={entry.data}>
+	    <Content />
+	</MarkdownPostLayout>
+	```
+
+5. Note that this wraps each post in \<MarkdownPostLayout>, meaning `layout: ../../layouts/MarkdownPostLayout.astro` can now be dropped from the markdown files
+6. In `src/pages/Blog.astro` replace `Astro.glob()` with `getCollection()`:
+	
+	```jsx
+	// const allPosts = await Astro.glob('../pages/posts/*.md');  
+	`const allPosts = await getCollection('posts');`
+	
+	//....
+	// {allPosts.map((post) => <BlogPost url={post.url} title={post.frontmatter.title} />)}
+	{allPosts.map((post) => <BlogPost url={"/posts/" + post.slug} title={post.data.title} />)}
+	```  
+
+7. The tutorial blog project also dynamically generates a page for each tag. Update `src/pages/tags/[tag].astro`:
+	
+	```jsx
+	// within getStaticPahts():
+	// const allPosts = await Astro.glob('../posts/*.md');
+	const allPosts = await getCollection("posts");
+	
+	// in getStaticPaths return clause
+	/* 
+	const uniqueTags = [...new Set (allPosts.map((post) => post.frontmatter.tags).flat())]
+	
+	  return uniqueTags.map((tag) => {
+	    const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+	*/
+	
+	const uniqueTags = [...new Set (allPosts.map((post) => post.data.tags).flat())]
+	  return uniqueTags.map((tag) => {
+	    const filteredPosts = allPosts.filter((post) => post.data.tags.includes(tag));
+	
+	```
+	
+8. and again in the tag index page `src/pages/tags/index.astro`
+9. and _again_ in the RSS feed: `src/pages/rss.xml.js`

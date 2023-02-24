@@ -1,5 +1,4 @@
 ---
-layout: ../../layouts/MarkdownPostLayout.astro
 title: 'First blog, first post!'
 pubDate: 2023-02-20
 author: 'Chris'
