@@ -1,6 +1,7 @@
 html {
-    background-color: #f1f5f9;
     font-family: sans-serif;
+    background: linear-gradient(90deg,	hsla(310, 100%, 11%, 1), 	hsla(340, 100%, 22%, 1));
+    
   }
   
   body {
@@ -9,10 +10,16 @@ html {
     max-width: 80ch;
     padding: 1rem;
     line-height: 1.5;
+    color: hsl(30, 100%, 80%);
   }
   
+  body a {
+    color: white;
+  }
+
   * {
     box-sizing: border-box;
+    
   }
   
   h1 {
@@ -36,6 +43,7 @@ html {
   }
   
   .nav-links {
+    
     width: 100%;
     top: 5rem;
     left: 48px;
@@ -45,6 +53,7 @@ html {
   }
   
   .nav-links a {
+    color: hsl(42, 100%, 50%);
     display: block;
     text-align: center;
     padding: 10px 0;

@@ -189,11 +189,11 @@ Simples!
 	```
 3. in page code fences, import: `import Footer from '../components/Footer.astro';`
 4. Instantiate in HTML, just before closing \</body> tag: 
-5. ```javascript
-			<Footer />
+	```javascript
+	<Footer />
 		</body>
-</html>
-```
+	</Footer>
+	```
 
 ## Reusable component
 ### [Component props](https://docs.astro.build/en/core-concepts/astro-components/#component-props)
@@ -310,20 +310,21 @@ In each page, between <Footer /> and </body>, insert:
 	</BaseLayout>
 	```
 
-## Pass content to your layouts with \[<slot />](https://docs.astro.build/en/core-concepts/astro-components/#slots)
+## Pass content to your layouts with [\<slot />](https://docs.astro.build/en/core-concepts/astro-components/#slots)
 The \<slot /> allows you to inject (or “slot in”) child content written between opening and closing \<Component> \</Component> tags to any Component.astro file.
 
 ### Pass page-specific values as props
 eg in `index.astro`
-	```jsx
-	---
-	import BaseLayout from '../layouts/BaseLayout.astro';
-	const pageTitle = "Home Page";
-	---
-	<BaseLayout pageTitle={pageTitle}>
-	  <h2>My awesome blog subtitle</h2>
-	</BaseLayout>
-	```
+
+```jsx
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const pageTitle = "Home Page";
+---
+<BaseLayout pageTitle={pageTitle}>
+	<h2>My awesome blog subtitle</h2>
+</BaseLayout>
+```
 ...and then modify BaseLayout.astro frontmatter to receive pageTitle as props:
 
 ```javascript
